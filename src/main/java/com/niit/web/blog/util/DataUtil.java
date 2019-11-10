@@ -46,6 +46,7 @@ public class DataUtil {
     }
 
     public static LocalDate getBirthday(){
+
         LocalDate now = LocalDate.now();
         Random random = new Random();
         int bound = random.nextInt(8888);

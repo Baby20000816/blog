@@ -1,0 +1,7 @@
+2019-11-10.00:06:20 INFO  [main] com.niit.web.blog.dao.MainDaoTest.batchInsert:38  成功
+2019-11-10.00:08:46 INFO  [main] com.niit.web.blog.dao.MainDaoTest.batchInsert:38  成功
+2019-11-10.00:13:00 INFO  [main] com.niit.web.blog.dao.MainDaoTest.batchInsert:38  成功
+2019-11-10.00:14:36 INFO  [main] com.niit.web.blog.dao.MainDaoTest.batchInsert:38  成功
+2019-11-10.00:16:28 INFO  [main] com.niit.web.blog.dao.MainDaoTest.batchInsert:38  成功
+2019-11-10.00:17:47 INFO  [main] com.niit.web.blog.dao.MainDaoTest.batchInsert:38  成功
+2019-11-10.00:25:02 ERROR [main] com.niit.web.blog.dao.MainDaoTest.batchInsert:44  批量新增用户出现异常

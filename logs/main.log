@@ -1,2 +1,1 @@
-2019-11-09.16:11:06 ERROR [main] com.niit.web.blog.dao.UserDaoTest.batchInsert:40  批量新增用户出现异常
-2019-11-09.16:11:06 ERROR [main] com.niit.web.blog.dao.UserDaoTest.findUserByMobile:50  根据手机号查询用户出现异常
+2019-11-10.13:40:06 INFO  [main] com.niit.web.blog.dao.MainDaoTest.batchInsert:37  成功

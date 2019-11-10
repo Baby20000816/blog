@@ -1,5 +1,4 @@
 package com.niit.web.blog.dao;
-
 import com.niit.web.blog.entity.User;
 
 import java.sql.SQLException;
