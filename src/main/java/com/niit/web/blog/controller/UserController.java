@@ -1,12 +1,11 @@
 package com.niit.web.blog.controller;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.niit.web.blog.dao.UserDao;
-import com.niit.web.blog.domain.UserDto;
+import com.niit.web.blog.domain.dto.UserDto;
 import com.niit.web.blog.factory.ServiceFactory;
-import com.niit.web.blog.filter.CorsFilter;
 import com.niit.web.blog.service.UserService;
+import com.niit.web.blog.util.DataUtil;
+import com.niit.web.blog.util.JSoupSpider;
 import com.niit.web.blog.util.Message;
 import com.niit.web.blog.util.ResponseObject;
 import org.slf4j.Logger;
@@ -29,7 +28,7 @@ import java.util.Map;
  * @Date 2019/11/9:16:43
  * @Version 1.0
  **/
-@WebServlet(urlPatterns = "/sign-in")
+@WebServlet(urlPatterns = {"/api/sign-in","/api/users"})
 public class UserController extends HttpServlet {
     private static Logger logger = LoggerFactory.getLogger(UserController.class);
     private UserService userService = ServiceFactory.getUserServiceInstance();
@@ -38,7 +37,7 @@ public class UserController extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         BufferedReader reader = req.getReader();
         StringBuilder stringBuilder = new StringBuilder();
-        String line = null;
+        String line;
         while ((line = reader.readLine()) != null) {
             stringBuilder.append(line);
         }
@@ -57,6 +56,16 @@ public class UserController extends HttpServlet {
         out.print(gson.toJson(ro));
         out.close();
     }
+
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        Gson gson = new GsonBuilder().create();
+        ResponseObject ro = ResponseObject.success(200,"成功", userService.getUsers());
+        PrintWriter out = resp.getWriter();
+        out.print(gson.toJson(ro));
+        out.close();
+    }
+
     @Override
     public void init() throws ServletException {
         logger.info("UserController初始化");

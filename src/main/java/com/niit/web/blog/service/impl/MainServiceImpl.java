@@ -2,7 +2,7 @@ package com.niit.web.blog.service.impl;
 
 
 import com.niit.web.blog.dao.MainDao;
-import com.niit.web.blog.domain.MainDto;
+import com.niit.web.blog.domain.dto.UserDto;
 import com.niit.web.blog.entity.Main;
 import com.niit.web.blog.factory.DaoFactory;
 import com.niit.web.blog.service.MainService;
@@ -25,7 +25,7 @@ public class MainServiceImpl implements MainService {
     private static Logger logger = LoggerFactory.getLogger(MainServiceImpl.class);
 
     @Override
-    public Map<String, Object> signIn(MainDto mainDto) {
+    public Map<String, Object> signIn(UserDto mainDto) {
         Main main = null;
         Map<String, Object> map = new HashMap<>();
         try {

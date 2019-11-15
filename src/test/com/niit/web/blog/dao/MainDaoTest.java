@@ -1,7 +1,9 @@
 package com.niit.web.blog.dao;
 
-import com.niit.web.blog.entity.Main;
+
+import com.niit.web.blog.entity.User;
 import com.niit.web.blog.factory.DaoFactory;
+
 import com.niit.web.blog.util.JSoupSpider;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -12,17 +14,17 @@ import java.sql.SQLException;
 import static org.junit.Assert.*;
 
 public class MainDaoTest {
-    private MainDao mainDao = DaoFactory.getMainDaoInstance();
-    private static Logger logger = LoggerFactory.getLogger(MainDaoTest.class);
+    private UserDao userDao = DaoFactory.getUserDaoInstance();
+    private static Logger logger = LoggerFactory.getLogger(UserDaoTest.class);
 
     @Test
     public void insert() {
         int n = 0;
-        Main main = new Main();
-        main.setMobile("13811112222");
-        main.setPassword("123");
+        User user = new User();
+        user.setMobile("13811112222");
+        user.setPassword("123");
         try {
-            n = mainDao.insert(main);
+            n = userDao.insert(user);
         } catch (SQLException e) {
             logger.error("新增用户出现异常");
         }
@@ -31,27 +33,22 @@ public class MainDaoTest {
 
     @Test
     public void batchInsert() {
-        try { int[] n = mainDao.batchInsert(JSoupSpider.getMain());
-            if (n.length!=0)
-            {
-                logger.info("成功");
-            }
-            else{
-                logger.error("失败");
-            }
+        int[] n = new int[0];
+        try {
+            n = userDao.batchInsert(JSoupSpider.getUsers());
         } catch (SQLException e) {
             logger.error("批量新增用户出现异常");
         }
     }
 
     @Test
-    public void findMainByMobile() {
-        Main main = null;
+    public void findUserByMobile() {
+        User user = null;
         try {
-            main = mainDao.findMainByMobile("13979913096");
+            user = userDao.findUserByMobile("13979913096");
         } catch (SQLException e) {
             logger.error("根据手机号查询用户出现异常");
         }
-        assertNotNull(main);
+        assertNotNull(user);
     }
 }

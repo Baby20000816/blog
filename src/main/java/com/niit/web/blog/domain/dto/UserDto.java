@@ -1,24 +1,24 @@
-package com.niit.web.blog.domain;
+package com.niit.web.blog.domain.dto;
 
 import lombok.Data;
 
 /**
- * @author jh_wu
- * @ClassName MainDto
+ * @author mq_xu
+ * @ClassName UserDto
  * @Description TODO
- * @Date 2019/11/9:20:42
+ * @Date 12:20 2019/11/9
  * @Version 1.0
  **/
 @Data
-public class MainDto {
+public class UserDto {
     private String mobile;
     private String password;
 
-    public MainDto(String mobile, String password) {
+    public UserDto(String mobile, String password) {
         this.mobile = mobile;
         this.password = password;
     }
 
-    public MainDto() {
+    public UserDto() {
     }
 }

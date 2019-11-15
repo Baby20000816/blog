@@ -1,6 +1,6 @@
 package com.niit.web.blog.service;
 
-import com.niit.web.blog.domain.MainDto;
+import com.niit.web.blog.domain.dto.UserDto;
 
 import java.util.Map;
 
@@ -14,8 +14,8 @@ import java.util.Map;
 public interface MainService {
     /**
      * 用户登录功能
-     * @param mainDto
+     * @param userDto
      * @return
      */
-    Map<String,Object> signIn(MainDto mainDto);
+    Map<String,Object> signIn(UserDto userDto);
 }
