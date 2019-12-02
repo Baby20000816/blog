@@ -1,8 +1,7 @@
 package com.niit.web.blog.domain.vo;
 
 import lombok.Data;
-import com.niit.web.blog.entity.Article;
-import lombok.Data;
+
 import java.time.LocalDateTime;
 
 /**
@@ -16,11 +15,16 @@ import java.time.LocalDateTime;
 public class ArticleVo  {
     private Long id;
     private Long userId;
-    private String nickname;
-    private String avatar;
+    private Long topicId;
     private String title;
     private String summary;
     private String thumbnail;
+    private String content;
     private Integer likes;
     private Integer comments;
+    private LocalDateTime createTime;
+    private String nickname;
+    private String avatar;
+    private String topicName;
+    private String logo;
 }

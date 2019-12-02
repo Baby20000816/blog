@@ -4,6 +4,7 @@ package com.niit.web.blog.dao;
 import com.niit.web.blog.entity.User;
 import com.niit.web.blog.factory.DaoFactory;
 
+import com.niit.web.blog.factory.ServiceFactory;
 import com.niit.web.blog.util.JSoupSpider;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -15,40 +16,23 @@ import static org.junit.Assert.*;
 
 public class UserDaoTest {
     private UserDao userDao = DaoFactory.getUserDaoInstance();
-    private static Logger logger = LoggerFactory.getLogger(UserDaoTest.class);
-
+    private Logger logger = LoggerFactory.getLogger(UserDaoTest.class);
     @Test
-    public void insert() {
-        int n = 0;
-        User user = new User();
-        user.setMobile("13811112222");
-        user.setPassword("123");
-        try {
-            n = userDao.insert(user);
-        } catch (SQLException e) {
-            logger.error("新增用户出现异常");
+    public void batchInsert() throws SQLException {
+        int[] i =userDao.batchInsert(JSoupSpider.getUsers());
+        if(i.length!=0) {
+            System.out.println(i.length);
+            logger.info("数据添加成功");
+        }else {
+            logger.error("用户数据添加失败");
         }
-        assertEquals(1, n);
+
     }
 
     @Test
-    public void batchInsert() {
-        int[] n = new int[0];
-        try {
-            n = userDao.batchInsert(JSoupSpider.getUsers());
-        } catch (SQLException e) {
-            logger.error("批量新增用户出现异常");
-        }
+    public void getUserById() {
+        User user = ServiceFactory.getUserServiceInstance().findUserById(2);
+        System.out.println(user);
     }
 
-    @Test
-    public void findUserByMobile() {
-        User user = null;
-        try {
-            user = userDao.findUserByMobile("13979913096");
-        } catch (SQLException e) {
-            logger.error("根据手机号查询用户出现异常");
-        }
-        assertNotNull(user);
-    }
 }

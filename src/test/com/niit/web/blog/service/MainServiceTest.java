@@ -7,10 +7,10 @@ import org.junit.Test;
 import java.util.Map;
 
 public class MainServiceTest {
-private MainService mainService = ServiceFactory.getMainServiceInstance();
+private UserService mainService = ServiceFactory.getUserServiceInstance();
     @Test
     public void signIn() {
-        UserDto userDto = new UserDto("13980320536", "a86b3e0c385fcf80e0ec0b5f0473d3");
+        UserDto userDto = new UserDto("13979913096", "d3b77d55332418cef1fb5e0243b0a10f");
         Map<String, Object> map = mainService.signIn(userDto);
         System.out.println(map);
     }

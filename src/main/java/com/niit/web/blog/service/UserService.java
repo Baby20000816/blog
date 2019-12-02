@@ -14,17 +14,25 @@ import java.util.Map;
  * @Version 1.0
  **/
 public interface UserService {
+
     /**
      * 用户登录功能
-     *
      * @param userDto
      * @return
      */
-    Map<String, Object> signIn(UserDto userDto);
+//    登录功能
+    Map<String,Object> signIn(UserDto userDto);
 
     /**
-     * 分页获取用户信息
+     * 所有用户查询功能
      * @return
      */
-    List<User> getUsers();
+    List<User> listUser();
+
+    /**
+     * 根据id查询用户信息
+     * @param id
+     * @return
+     */
+    User findUserById(long id);
 }

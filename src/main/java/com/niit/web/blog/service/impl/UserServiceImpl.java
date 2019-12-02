@@ -25,42 +25,50 @@ import java.util.Map;
 public class UserServiceImpl implements UserService {
     private UserDao userDao = DaoFactory.getUserDaoInstance();
     private static Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
-
     @Override
     public Map<String, Object> signIn(UserDto userDto) {
         User user = null;
         Map<String, Object> map = new HashMap<>();
         try {
+//            调用Dao实现类中的方法查询数据，将查到的数据存入user中
             user = userDao.findUserByMobile(userDto.getMobile());
         } catch (SQLException e) {
             logger.error("根据手机号查询用户出现异常");
         }
-        if (user != null) {
-            if (user.getPassword().equals(DigestUtils.md5Hex(userDto.getPassword()))) {
+        if(user != null){
+//            将前端获得的密码与user中的密码进行比较
+            if(user.getPassword().equals(userDto.getPassword())){
+//                将数据存入不同键的对应值中
                 map.put("msg", Message.SIGN_IN_SUCCESS);
                 map.put("data", user);
-            } else {
+            }else {
                 map.put("msg", Message.PASSWORD_ERROR);
             }
-        } else {
+        }else {
             map.put("msg", Message.MOBILE_NOT_FOUND);
         }
+//        返回map，供controller使用
         return map;
     }
 
-//    @Override
-//    public List<User> getUsers(int pageNumber, int perCount) {
-//        return null;
-//    }
-
     @Override
-    public List<User> getUsers() {
-        List<User> userList = null;
+    public List<User> listUser() {
+        List<User> userList = null ;
         try {
-            userList = userDao.selectHotUsers();
+            userList = userDao.selectAll();
         } catch (SQLException e) {
-            logger.error("获取所有用户出现异常");
+            logger.error("查询所有用户功能出现异常");
         }
         return userList;
+    }
+
+    @Override
+    public User findUserById(long id) {
+        User user = null;
+        try {
+            user = userDao.getUserById(id);
+        } catch (SQLException e) {
+            logger.error("通过id查询用户出现异常");        }
+        return user;
     }
 }

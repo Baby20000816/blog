@@ -1,3 +1,4 @@
+/*
 package com.niit.web.blog.dao;
 
 import com.niit.web.blog.dao.impl.StudentDaoImpl;
@@ -27,4 +28,4 @@ public class StudentDaoTest {
         int[] n = studentDao.batchInsert(students);
         System.out.println(n.length);
     }
-}
+}*/

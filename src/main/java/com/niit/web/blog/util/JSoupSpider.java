@@ -1,8 +1,11 @@
+
 package com.niit.web.blog.util;
 
+import com.niit.web.blog.entity.Address;
 import com.niit.web.blog.entity.Article;
 import com.niit.web.blog.entity.Topic;
 import com.niit.web.blog.entity.User;
+import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -11,6 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,12 +29,14 @@ import java.util.List;
 public class JSoupSpider {
     private static Logger logger = LoggerFactory.getLogger(JSoupSpider.class);
 
+    /*爬取用户信息*/
     public static List<User> getUsers() {
         Document document = null;
         List<User> userList = new ArrayList<>(100);
         for (int i = 1; i <= 3; i++) {
             try {
-                document = Jsoup.connect("https://www.jianshu.com/recommendations/users?utm_source=desktop&utm_medium=index-users&page=" + i).get();
+                document = Jsoup.connect("https://www.jianshu.com/recommendations/users?utm_s" +
+                        "ource=desktop&utm_medium=index-users&page=" + i).get();
             } catch (IOException e) {
                 logger.error("连接失败");
             }
@@ -38,26 +45,51 @@ public class JSoupSpider {
                 Element wrapDiv = div.child(0);
                 Element link = wrapDiv.child(0);
                 Elements linkChildren = link.children();
-                String introduction = linkChildren.get(2).text();
-                if (!introduction.equals("") && introduction != null) {
-                    User user = new User();
-                    user.setMobile(DataUtil.getMobile());
-                    user.setPassword(DataUtil.getPassword());
-                    user.setGender(DataUtil.getGender());
-                    user.setAvatar("https:" + linkChildren.get(0).attr("src"));
-                    user.setNickname(linkChildren.get(1).text());
-                    user.setIntroduction(introduction);
-                    user.setBirthday(DataUtil.getBirthday());
-                    user.setAddress(DataUtil.getAddress());
-                    user.setCreateTime(DataUtil.getCreateTime());
-                    userList.add(user);
-                }
-
+                User user = new User();
+                user.setMobile(DataUtil.getMobile());
+                user.setPassword(DataUtil.getPassword());
+                user.setGender(DataUtil.getGender());
+                user.setAvatar("https:" + linkChildren.get(0).attr("src"));
+                user.setNickname(linkChildren.get(1).text());
+                user.setIntroduction(linkChildren.get(2).text());
+                user.setBirthday(DataUtil.getBirthday());
+                user.setCreateTime(LocalDateTime.now());
+                userList.add(user);
             });
         }
         return userList;
     }
 
+    /*爬取地址信息*/
+    public static List getAddress() {
+        List<Address> addressList = new ArrayList<>();
+        Document document = null;
+        try {
+            document = Jsoup.connect("http://www.ip33.com/area_code.html").get();
+        } catch (IOException e) {
+            logger.error("获取地址连接异常");
+        }
+        Elements divs = document.getElementsByClass("ip");
+        divs.forEach(div -> {
+            Elements elements = div.child(1).child(0).child(1).children();
+            elements.forEach(element -> {
+                Address address = new Address();
+                StringBuilder province = new StringBuilder("");
+                String country = div.child(1).child(0).child(0).text();
+                int c = country.indexOf(" ");
+                int p = div.child(0).text().indexOf(" ");
+                int e = element.text().indexOf(" ");
+                province.append(div.child(0).text().substring(0, p)).append(country.substring(0, c)).append(element.text().substring(0, e));
+                address.setAddress(province.toString());
+                addressList.add(address);
+            });
+
+        });
+
+        return addressList;
+    }
+
+    /*爬取文章信息*/
     public static List<Article> getArticles() {
         Document document = null;
         List<Article> articleList = new ArrayList<>(100);
@@ -106,33 +138,44 @@ public class JSoupSpider {
         return articleList;
     }
 
+    /*爬取简书网专题*/
     public static List<Topic> getTopics() {
-        List<Topic> topicList = new ArrayList<>(20);
+        List<Topic> topicList = new ArrayList<>(100);
+        Connection connection;
         Document document = null;
-//        for (int i = 1; i <= 3; i++) {
-        try {
-            document = Jsoup.connect("https://www.zhihu.com/special/all").get();
-        } catch (IOException e) {
-            logger.error("连接失败");
+        for(int i = 1; i <= 3; i++){
+            try {
+                /*分析页面，得到url和参数*/
+                connection = Jsoup.connect("https://www.jianshu.com/recommendations/collections?order_by=hot&page=" + i);
+                /*通过chorme开发者工具查看该请求头必须添加请求头*/
+                connection.header("X-PJAX", "true");
+                document = connection.get();
+            } catch (IOException e) {
+                logger.error("连接失败");
+            }
+            assert document != null;
+            Elements list = document.select(".collection-wrap");
+            list.forEach(item ->{
+                Elements elements = item.children();
+                Topic topic = new Topic();
+                Element link = elements.select("a").get(0);
+                Element logo = link.child(0);
+                Element name = link.child(1);
+                Element description = link.child(2);
+                Element articles = elements.select(".count > a").get(0);
+                Element follows = elements.select(".count > a").get(0);
+//                topic.setAuthorId(DataUtil.getAuthorId());
+                topic.setName(name.text());
+                topic.setLogo(logo.attr("src"));
+                topic.setDescription(description.text());
+                String [] str = StringUtil.getDigital(articles.text());
+                topic.setArticles(Long.parseLong(str[0]));
+                str = StringUtil.getDigital(follows.text());
+                topic.setFollows(Integer.parseInt(str[0]));
+                topic.setUpdateTime(LocalDate.now());
+                topicList.add(topic);
+            });
         }
-        Elements lis = document.select(".SpecialListCard");
-        System.out.println(lis.size());
-//            lis.forEach(li -> {
-//                Topic topic = new Topic();
-//                topic.setName(li.child(1).child(0).text());
-//                topic.setLogo(li.child(0).child(0).attr("src"));
-//                String metaInfo = li.child(2).child(0).text();
-//                String[] result = StringUtil.getDigital(metaInfo);
-//                topic.setArticles(Integer.parseInt(result[0]));
-//                topic.setFollows(Integer.parseInt(result[1]));
-//                topicList.add(topic);
-//            });
-//        }
         return topicList;
-    }
-
-    public static void main(String[] args) {
-        List<Topic> topicList = JSoupSpider.getTopics();
-//        topicList.forEach(System.out::println);
     }
 }

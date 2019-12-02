@@ -1,4 +1,4 @@
-package com.niit.web.blog.service.impl;
+/*package com.niit.web.blog.service.impl;
 
 import com.niit.web.blog.dao.StudentDao;
 import com.niit.web.blog.entity.Student;
@@ -8,13 +8,13 @@ import com.niit.web.blog.service.StudentService;
 import java.sql.SQLException;
 import java.util.List;
 
-/**
+*//**
  * @author jh_wu
  * @ClassName StudentServiceImpl
  * @Description TODO
  * @Date 2019/11/5:16:12
  * @Version 1.0
- **/
+ **//*
 public class StudentServiceImpl implements StudentService {
     private StudentDao studentDao = DaoFactory.getStudentDaoInstance();
     @Override
@@ -28,4 +28,4 @@ public class StudentServiceImpl implements StudentService {
         return students;
     }
 
-}
+}*/

@@ -17,19 +17,19 @@ public class MainDaoTest {
     private UserDao userDao = DaoFactory.getUserDaoInstance();
     private static Logger logger = LoggerFactory.getLogger(UserDaoTest.class);
 
-    @Test
-    public void insert() {
-        int n = 0;
+
+ /*   public void insert() {
+        long n = 0;
         User user = new User();
         user.setMobile("13811112222");
         user.setPassword("123");
         try {
-            n = userDao.insert(user);
+            n = userDao.getUserById(user);
         } catch (SQLException e) {
             logger.error("新增用户出现异常");
         }
         assertEquals(1, n);
-    }
+    }*/
 
     @Test
     public void batchInsert() {

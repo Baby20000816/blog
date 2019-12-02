@@ -1,3 +1,4 @@
+/*
 package com.niit.web.blog.service;
 
 import com.niit.web.blog.entity.Student;
@@ -15,4 +16,4 @@ private StudentService studentService = ServiceFactory.getStudentServiceInstance
         List<Student> students= studentService.listStudent();
         students.forEach(student -> System.out.println(student));
     }
-}
+}*/

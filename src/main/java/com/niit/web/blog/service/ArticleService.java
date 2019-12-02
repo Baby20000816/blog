@@ -1,25 +1,23 @@
 package com.niit.web.blog.service;
 
-import com.niit.web.blog.dao.StudentDao;
-import com.niit.web.blog.dao.UserDao;
 
 import com.niit.web.blog.domain.vo.ArticleVo;
-import com.niit.web.blog.entity.Student;
-import com.niit.web.blog.entity.User;
+import com.niit.web.blog.entity.Article;
 
 import java.util.List;
 
-/**
- * @author jh_wu
- * @ClassName ArticleService
- * @Description TODO
- * @Date 2019/11/9
- * @Version 1.0
- **/
-    public interface ArticleService {
-        /**
-         * 获取热门文章
-         * @return
-         */
-        List<ArticleVo> getHotArticles();
-    }
+public interface ArticleService {
+
+    /**
+     * 查询所有文章信息
+     * @return
+     */
+    public List<Article> listArticle();
+
+    /**
+     * 两表联查，查询用户对应的文章信息
+     * @param id
+     * @return
+     */
+    public List<ArticleVo> listAuthorArticle(long id);
+}

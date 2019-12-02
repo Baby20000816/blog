@@ -12,12 +12,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
 /**
- * @author jh_wu
+ * @author mq_xu
  * @ClassName UserDaoImpl
- * @Description TODO
- * @Date 2019/11/9:14:40
+ * @Description UserDao数据访问对象接口实现类
+ * @Date 2019/11/9
  * @Version 1.0
  **/
 public class UserDaoImpl implements UserDao {
@@ -27,11 +26,11 @@ public class UserDaoImpl implements UserDao {
     public int insert(User user) throws SQLException {
         Connection connection = DbUtil.getConnection();
         String sql = "INSERT INTO t_user (mobile,password) VALUES (?,?) ";
-        PreparedStatement pstmt = connection.prepareStatement(sql);
-        pstmt.setString(1, user.getMobile());
-        pstmt.setString(2, user.getPassword());
-        int n = pstmt.executeUpdate();
-        DbUtil.close(null, pstmt, connection);
+        PreparedStatement pst = connection.prepareStatement(sql);
+        pst.setString(1, user.getMobile());
+        pst.setString(2, user.getPassword());
+        int n = pst.executeUpdate();
+        DbUtil.close(connection, pst);
         return n;
     }
 
@@ -40,26 +39,25 @@ public class UserDaoImpl implements UserDao {
         Connection connection = DbUtil.getConnection();
         connection.setAutoCommit(false);
         String sql = "INSERT INTO t_user (mobile,password,nickname,avatar,gender,birthday,address,introduction,create_time) VALUES (?,?,?,?,?,?,?,?,?) ";
-        PreparedStatement pstmt = connection.prepareStatement(sql);
+        PreparedStatement pst = connection.prepareStatement(sql);
         userList.forEach(user -> {
             try {
-                pstmt.setString(1, user.getMobile());
-                pstmt.setString(2, user.getPassword());
-                pstmt.setString(3, user.getNickname());
-                pstmt.setString(4, user.getAvatar());
-                pstmt.setString(5, user.getGender());
-                pstmt.setObject(6, user.getBirthday());
-                pstmt.setString(7, user.getAddress());
-                pstmt.setString(8, user.getIntroduction());
-                pstmt.setObject(9, user.getCreateTime());
-                pstmt.addBatch();
+                pst.setString(1, user.getMobile());
+                pst.setString(2, user.getPassword());
+                pst.setString(3, user.getNickname());
+                pst.setString(4, user.getAvatar());
+                pst.setString(5, user.getGender());
+                pst.setObject(6, user.getBirthday());
+                pst.setString(7, user.getAddress());
+                pst.setString(8, user.getIntroduction());
+                pst.setObject(9, user.getCreateTime());
+                pst.addBatch();
             } catch (SQLException e) {
                 logger.error("批量加入用户数据产生异常");
             }
         });
-        int[] result = pstmt.executeBatch();
-        connection.commit();
-        DbUtil.close(null, pstmt, connection);
+        int[] result = pst.executeBatch();
+        DbUtil.close(connection, pst);
         return result;
     }
 
@@ -67,22 +65,36 @@ public class UserDaoImpl implements UserDao {
     public User findUserByMobile(String mobile) throws SQLException {
         Connection connection = DbUtil.getConnection();
         String sql = "SELECT * FROM t_user WHERE mobile = ? ";
-        PreparedStatement pstmt = connection.prepareStatement(sql);
-        pstmt.setString(1, mobile);
-        ResultSet rs = pstmt.executeQuery();
-        return convertUser(rs).get(0);
+        PreparedStatement pst = connection.prepareStatement(sql);
+        pst.setString(1, mobile);
+        ResultSet rs = pst.executeQuery();
+        User user = convert(rs).get(0);
+        DbUtil.close(connection, pst, rs);
+        return user;
     }
 
     @Override
     public List<User> selectHotUsers() throws SQLException {
         Connection connection = DbUtil.getConnection();
-        String sql = "SELECT * FROM t_user ORDER BY id DESC LIMIT 10 ";
-        PreparedStatement pstmt = connection.prepareStatement(sql);
-        ResultSet rs = pstmt.executeQuery();
-        return convertUser(rs);
+        String sql = "SELECT * FROM t_user ORDER BY fans DESC LIMIT 10 ";
+        PreparedStatement pst = connection.prepareStatement(sql);
+        ResultSet rs = pst.executeQuery();
+        List<User> userList = convert(rs);
+        DbUtil.close(connection, pst, rs);
+        return userList;
     }
 
-    private List<User> convertUser(ResultSet rs) {
+    @Override
+    public List<User> selectPageUsers(int currentPage, int pageCount) throws SQLException {
+        return null;
+    }
+
+    @Override
+    public UserVo getUser(long id) throws SQLException {
+        return null;
+    }
+
+    private List<User> convert(ResultSet rs) {
         List<User> userList = new ArrayList<>(50);
         try {
             while (rs.next()) {
@@ -95,6 +107,8 @@ public class UserDaoImpl implements UserDao {
                 user.setGender(rs.getString("gender"));
                 user.setBirthday(rs.getDate("birthday").toLocalDate());
                 user.setIntroduction(rs.getString("introduction"));
+                user.setBanner(rs.getString("banner"));
+                user.setEmail(rs.getString("email"));
                 user.setAddress(rs.getString("address"));
                 user.setFollows(rs.getShort("follows"));
                 user.setFans(rs.getShort("fans"));
@@ -104,7 +118,7 @@ public class UserDaoImpl implements UserDao {
                 userList.add(user);
             }
         } catch (SQLException e) {
-            logger.error("查询用户数据产生异常");
+            logger.error("用户数据结果集解析产生异常");
         }
         return userList;
     }

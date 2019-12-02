@@ -1,7 +1,8 @@
-package com.niit.web.blog.service.impl;
+/*package com.niit.web.blog.service.impl;
 
 
 import com.niit.web.blog.dao.MainDao;
+import com.niit.web.blog.dao.UserDao;
 import com.niit.web.blog.domain.dto.UserDto;
 import com.niit.web.blog.entity.Main;
 import com.niit.web.blog.factory.DaoFactory;
@@ -13,15 +14,15 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
+*//**
  * @author jh_wu
  * @ClassName UserServiceImpl
  * @Description TODO
  * @Date 2019/11/9:15:45
  * @Version 1.0
- **/
+ **//*
 public class MainServiceImpl implements MainService {
-    private MainDao mainDao = DaoFactory.getMainDaoInstance();
+    private UserDao mainDao = DaoFactory.getUserDaoInstance();
     private static Logger logger = LoggerFactory.getLogger(MainServiceImpl.class);
 
     @Override
@@ -29,7 +30,7 @@ public class MainServiceImpl implements MainService {
         Main main = null;
         Map<String, Object> map = new HashMap<>();
         try {
-            main = mainDao.findMainByMobile(mainDto.getMobile());
+            main = mainDao.findUserByMobile(UserDto.class);
         } catch (SQLException e) {
             logger.error("根据手机号查询用户出现异常");
         }
@@ -46,4 +47,4 @@ public class MainServiceImpl implements MainService {
         return map;
     }
 
-}
+}*/
